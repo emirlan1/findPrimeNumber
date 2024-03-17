@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Проверка простых чисел</title>
+<style>
+    .container {
+        max-width: 600px;
+        margin: 50px auto;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Проверка простых чисел</h2>
+    <input type="number" id="numberInput" placeholder="Введите число от 0 до 1 000 000">
+    <button onclick="checkPrime()">Проверить</button>
+    <div id="result"></div>
+</div>
+<script>
+    function isPrime(num) {
+        if (num <= 1) return false;
+        if (num <= 3) return true;
+        if (num % 2 === 0 || num % 3 === 0) return false;
+        for (let i = 5; i * i <= num; i += 6) {
+            if (num % i === 0 || num % (i + 2) === 0) return false;
+        }
+        return true;
+    }
+
+    function findNearestPrimes(num) {
+        let smallerPrime = null;
+        let largerPrime = null;
+        for (let i = num - 1; i > 1; i--) {
+            if (isPrime(i)) {
+                smallerPrime = i;
+                break;
+            }
+        }
+        for (let i = num + 1; i <= 1000000; i++) {
+            if (isPrime(i)) {
+                largerPrime = i;
+                break;
+            }
+        }
+        return [smallerPrime, largerPrime];
+    }
+
+    function checkPrime() {
+        const numberInput = document.getElementById('numberInput').value;
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '';
+        const number = parseInt(numberInput);
+        if (isNaN(number) || number < 0 || number > 1000000) {
+            resultDiv.innerHTML = 'Пожалуйста, введите число от 0 до 1 000 000.';
+            return;
+        }
+        const isNumberPrime = isPrime(number);
+        if (isNumberPrime) {
+            resultDiv.innerHTML = `Число ${number} является простым.`;
+        } else {
+            const nearestPrimes = findNearestPrimes(number);
+            resultDiv.innerHTML = `Число ${number} не является простым.<br>
+            Ближайшие простые числа: ${nearestPrimes[0] || 'нет'} (слева) и ${nearestPrimes[1] || 'нет'} (справа).`;
+        }
+    }
+</script>
+</body>
+</html>
